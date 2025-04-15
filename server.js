@@ -4,24 +4,17 @@ const { Server } = require('socket.io');
 const path = require('path');
 
 const app = express();
-const server = http.createServer(app)
+const server = http.createServer(app);
+
+const socketRouter = require('./router/socketRouter');
+const socketController = require('./controller/socketController')
+
 app.use(express.static(path.join(__dirname,"./public")))
+app.use('/', socketRouter);
 
 const io = new Server(server);
 
-io.on("connection" , (socket)=>{
- console.log(`New connection established on ${socket.id}`)
-
- socket.on("message" , (data)=>{
-    console.log(`Message : ${data}`)
-    io.emit("message", data)
-})
-
-socket.on("disconnect", ()=>{
- console.log("User disconnected...")
-})
-})
-
+io.on("connection" , (socket)=>{socketController(socket,io)})
 
 server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
