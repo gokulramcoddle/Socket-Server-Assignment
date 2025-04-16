@@ -13,8 +13,7 @@ app.use(express.static(path.join(__dirname,"./public")))
 app.use('/', socketRouter);
 
 const io = new Server(server);
-
-io.on("connection" , (socket)=>{socketController(socket,io)})
+socketController(io);
 
 server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
